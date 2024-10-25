@@ -7,33 +7,61 @@ import { Estudiante } from '../../Modelos/estudiante';
 export default function HookComponents() {
 
   const [estudiantes, setEstudiantes] = useState<Estudiante[]>([]);
+  const [alternar, setAlternar] = useState<boolean>(true);
+  const [segundos, setSegundos] = useState<number>(5); 
 
-  useEffect(()=>{
-    const listaEstudiantes: Estudiante [] = [
-        {id: 1, nombre: "Juan López"},
-        {id: 2, nombre: "Denis Romero"},
-        {id: 3, nombre: "Mario Alonzo"},
-        {id: 4, nombre: "Obed Olmedo"},
-        {id: 5, nombre: "Carolina Reyes"},
-        {id: 6, nombre: "Diana Hernandez"},
-        {id: 7, nombre: "Olivia Ocampo"},
-        {id: 8, nombre: "Erick Vallecillo"},
-        {id: 9, nombre: "Oscar Ortiz"},
-        {id: 10, nombre: "Cesar Flores"}
-    ];
-    setEstudiantes(listaEstudiantes);
-  })
+     // Lista inicial
+  const listaEstudiantes1: Estudiante[] = [
+    { id: 1, nombre: "Juan López" },
+    { id: 2, nombre: "Denis Romero" },
+    { id: 3, nombre: "Mario Alonzo" },
+    { id: 4, nombre: "Obed Olmedo" },
+    { id: 5, nombre: "Carolina Reyes" },
+    { id: 6, nombre: "Diana Hernandez" },
+    { id: 7, nombre: "Olivia Ocampo" },
+    { id: 8, nombre: "Erick Vallecillo" },
+    { id: 9, nombre: "Oscar Ortiz" },
+    { id: 10, nombre: "Cesar Flores" }
+  ];
 
-/**
- <ul>
-        {estudiantes.map((Name) => (
-          <li key={Name.id}>
-            {Name.id} - {Name.nombre}
-          </li>
-        ))}
-      </ul>
-*/
+  // Nueva lista que se alternará
+  const listaEstudiantes2: Estudiante[] = [
+    { id: 11, nombre: "Joselyn Alvarado" },
+    { id: 12, nombre: "Nohamy Hernandez" },
+    { id: 13, nombre: "Hanseph Garcia" },
+    { id: 14, nombre: "Cintya Zapata" },
+    { id: 15, nombre: "Gemmy Rivera" },
+    { id: 16, nombre: "Diana Hernandez" },
+    { id: 17, nombre: "Rosario Maldonado" },
+    { id: 18, nombre: "Luis Borjas" },
+    { id: 19, nombre: "Carlos Silva" },
+    { id: 20, nombre: "Denilson Acosta" }
+  ];
 
+
+  useEffect(() => {
+
+    
+    // Alternar entre las dos listas cada 5 segundos
+    const interval = setInterval(() => {
+      setEstudiantes(alternar ? listaEstudiantes2 : listaEstudiantes1);
+      setAlternar(!alternar); 
+      setSegundos(6); 
+    }, 5000); 
+
+    
+    return () => clearInterval(interval);
+  }, [alternar]); 
+
+  useEffect(() => {
+    
+    const contador = setInterval(() => {
+      setSegundos((segundos) => (segundos > 0 ? segundos - 1 : 6));
+    }, 1000); 
+
+    
+    return () => clearInterval(contador);
+  }, []);
 
  // Definimos la función renderItem dentro del componente
  const renderItem = ({ item }: { item: Estudiante }) => (
@@ -43,30 +71,22 @@ export default function HookComponents() {
     </View>
   );
 
-
-  //Actualizar lista
-  
-
-
   return (
     <View style={styles.container}>
       <Text style={styles.header} >Listado de Estudiantes</Text>
 
-      {/* Cabecera de la tabla */}
       <View style={styles.tableHeader}>
         <Text style={styles.headerCell}>ID</Text>
         <Text style={styles.headerCell}>Nombre</Text>
       </View>
 
-     {/* Lista de nombres renderizada en una tabla */}
-   
       <FlatList
         data={estudiantes}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
       />
 
-    <Text>Actualizando lista en: </Text>
+    <Text>Actualizando lista en {segundos} segundos...</Text>
 
     </View>
     
